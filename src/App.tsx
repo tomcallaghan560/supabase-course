@@ -9,7 +9,7 @@ function App() {
       <form style={{ marginBottom: "1rem" }}>
         <input
           type="text"
-          placeholder="Task Title"
+          placeholder="Task Title heere now"
           style={{ width: "100%", marginBottom: "0.5rem", padding: "0.5rem" }}
         />
         <textarea
