@@ -17,6 +17,7 @@ function TaskManager({ session }: { session: Session }) {
 
   const [taskImage, setTaskImage] = useState<File | null>(null);
 
+  // fetchTasks
   const fetchTasks = async () => {
     const { error, data } = await supabase
       .from("tasks")
@@ -31,6 +32,7 @@ function TaskManager({ session }: { session: Session }) {
     setTasks(data);
   };
 
+  // deleteTask
   const deleteTask = async (id: number) => {
     const { error } = await supabase.from("tasks").delete().eq("id", id);
 
@@ -40,6 +42,7 @@ function TaskManager({ session }: { session: Session }) {
     }
   };
 
+  // updateTask
   const updateTask = async (id: number) => {
     const { error } = await supabase
       .from("tasks")
@@ -52,8 +55,10 @@ function TaskManager({ session }: { session: Session }) {
     }
   };
 
+  // uploadImage
   const uploadImage = async (file: File): Promise<string | null> => {
-    const filePath = `${file.name}-${Date.now()}`;
+    const filePath = `${file.name}-${Date.now()}`; // make sure image is unique using name and image
+    // because rare two people upload same file at exact same time. 
 
     const { error } = await supabase.storage
       .from("tasks-images")
@@ -71,6 +76,7 @@ function TaskManager({ session }: { session: Session }) {
     return data.publicUrl;
   };
 
+  // handleSubmit
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -83,7 +89,7 @@ function TaskManager({ session }: { session: Session }) {
       .from("tasks")
       .insert({ ...newTask, email: session.user.email, image_url: imageUrl })
       .select()
-      .single();
+      .single(); // return as single item not array.
 
     if (error) {
       console.error("Error adding task: ", error.message);
@@ -93,18 +99,21 @@ function TaskManager({ session }: { session: Session }) {
     setNewTask({ title: "", description: "" });
   };
 
+  // handleFileChange
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
+    if (e.target.files && e.target.files.length > 0) { // store first file that is selected.
       setTaskImage(e.target.files[0]);
     }
   };
 
+  // useEffect
   useEffect(() => {
     fetchTasks();
   }, []);
 
+  // independent useEffect that subscribes to tasks table.
   useEffect(() => {
-    const channel = supabase.channel("tasks-channel");
+    const channel = supabase.channel("tasks-channel"); // channel: place in which broadcasting messages to.
     channel
       .on(
         "postgres_changes",
@@ -114,7 +123,7 @@ function TaskManager({ session }: { session: Session }) {
           setTasks((prev) => [...prev, newTask]);
         }
       )
-      .subscribe((status) => {
+      .subscribe((status) => { // check if subscription active.
         console.log("Subscription: ", status);
       });
   }, []);
@@ -143,7 +152,7 @@ function TaskManager({ session }: { session: Session }) {
           style={{ width: "100%", marginBottom: "0.5rem", padding: "0.5rem" }}
         />
 
-        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <input type="file" accept="image/*" onChange={handleFileChange} /> // * images of any kind.
 
         <button type="submit" style={{ padding: "0.5rem 1rem" }}>
           Add Task

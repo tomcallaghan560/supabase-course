@@ -29,3 +29,8 @@ RLS row level security can define different types of rows and permissive
 RLS define what users can and can not do on table. Can define different types of policies for people in table with different roles and explain if they can or cannot execute certain commands. So there is select, update, delete commands. 
 
 When connecting to supabase it is same for nextjs, react router V7, remix
+
+await supabase. // for all supabase operations
+
+
+const {error, data} = awaitsupabase.from("tasks").insert({newTask, {}}) // "tasks" is TABLE and newTask can be LIST too.

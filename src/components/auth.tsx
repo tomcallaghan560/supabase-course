@@ -6,10 +6,12 @@ export const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // handleSubmit
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isSignUp) {
+      // When sign up for first time need to confirm email to make project more secure.
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
