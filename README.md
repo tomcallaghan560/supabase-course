@@ -28,3 +28,30 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+  SELECT table_name, 'CREATE TABLE ' || table_name || E'\n(\n' ||
+       string_agg('  ' || column_name || ' ' || data_type, E',\n') ||
+       E'\n);'
+FROM information_schema.columns
+WHERE table_schema = 'public'
+GROUP BY table_name;
+
+CREATE TABLE users
+(
+  id bigint,
+  created_at timestamp with time zone,
+  age bigint,
+  email text,
+  name text
+);
+
+  CREATE TABLE tasks
+(
+  id bigint,
+  created_at timestamp with time zone,
+  email text,
+  image_url text,
+  title text,
+  description text
+
+);
